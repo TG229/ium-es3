@@ -22,6 +22,12 @@ public class PieChartView extends View {
     private PointF center = new PointF();
     private int radius = 100;
 
+    private int  strokeColor;
+    private int strokeWidth;
+
+    private int selectedIndex = 2;
+    private float selectedStartAngle = 0.0f;
+
     @Override
     protected void onDraw(Canvas canvas){
         Paint paint = new Paint();
@@ -49,6 +55,27 @@ public class PieChartView extends View {
 
             paint.setColor(c);
             paint.setStyle(Paint.Style.FILL);
+            canvas.drawArc(enclosing, alpha, p*p2a, true, paint);
+            alpha += p*p2a;
+        }
+
+        alpha = -90.0f;
+
+        for(int i = 0; i < percent.size(); i++){
+            p = percent.get(i);
+            c = segmentColor.get(i);
+
+            paint.setColor(strokeColor);
+            paint.setStrokeWidth(strokeWidth);
+            paint.setStyle(Paint.Style.STROKE);
+
+            if(i == selectedIndex){
+                selectedStartAngle = alpha;
+            }
+
+            canvas.drawArc(enclosing, alpha, p*p2a, true, paint);
+
+            alpha += p*p2a;
         }
     }
 
@@ -90,6 +117,12 @@ public class PieChartView extends View {
     }
 
     public void setSegmentColor(List<Integer> segmentColor) {
+        if(segmentColor.size() != percent.size()){
+            throw new IllegalArgumentException(
+                    "La lista dei colori e delle percentuali devono avere la stessa dimensione."
+            );
+        }
+
         this.segmentColor = segmentColor;
     }
 
@@ -107,5 +140,37 @@ public class PieChartView extends View {
 
     public void setRadius(int radius) {
         this.radius = radius;
+    }
+
+    public int getStrokeColor() {
+        return strokeColor;
+    }
+
+    public void setStrokeColor(int strokeColor) {
+        this.strokeColor = strokeColor;
+    }
+
+    public int getStrokeWidth() {
+        return strokeWidth;
+    }
+
+    public void setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
+    }
+
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedIndex = selectedIndex;
+    }
+
+    public float getSelectedStartAngle() {
+        return selectedStartAngle;
+    }
+
+    public void setSelectedStartAngle(float selectedStartAngle) {
+        this.selectedStartAngle = selectedStartAngle;
     }
 }
